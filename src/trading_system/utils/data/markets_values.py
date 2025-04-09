@@ -3,7 +3,7 @@ import json
 
 def get_market_data(ticker: str, period: str = "5d", interval: str = "1d") -> str:
     """
-    Retrieves historical data for a ticker using yfinance and converts it to JSON.
+    Retrieves historical market data for a ticker using yfinance and converts it to JSON.
     
     Args:
         ticker (str): The stock symbol (e.g., 'AAPL')
@@ -20,12 +20,9 @@ def get_market_data(ticker: str, period: str = "5d", interval: str = "1d") -> st
             - '1mo' (1 month) - max all
         
     Returns:
-        str: A formatted JSON string containing market data
+        str: A formatted JSON string containing market history data
     """
     stock = yf.Ticker(ticker)
-
-    # Get company information
-    info = stock.info
     history = stock.history(period=period, interval=interval)
 
     # Convert DataFrame to JSON dictionary list
@@ -40,17 +37,29 @@ def get_market_data(ticker: str, period: str = "5d", interval: str = "1d") -> st
             "volume": int(row["Volume"])
         })
 
-    # Create final dictionary containing historical data and company info
-    final_result = {
-        "history": json_data,
-        "info": info
-    }
+    return json.dumps(json_data, indent=4)
 
-    # Convert to formatted JSON string
-    return json.dumps(final_result, indent=4)
+def get_company_info(ticker: str) -> str:
+    """
+    Retrieves company information for a ticker using yfinance and converts it to JSON.
+    
+    Args:
+        ticker (str): The stock symbol (e.g., 'AAPL')
+        
+    Returns:
+        str: A formatted JSON string containing company information
+    """
+    stock = yf.Ticker(ticker)
+    info = stock.info
+    return json.dumps(info, indent=4)
 
 # Example usage
 if __name__ == "__main__":
     # Example with 5-minute intervals for the last day
     json_result = get_market_data("AAPL", "1d", "5m")
     print(json_result)
+    
+    # Example of getting only company info
+    info_result = get_company_info("AAPL")
+    print("\nCompany Info:")
+    print(info_result)
