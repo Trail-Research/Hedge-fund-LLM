@@ -1,11 +1,17 @@
 import requests
 import os
+import yfinance as yf
+import json
 from dotenv import load_dotenv
 
 load_dotenv()
 
 base_url = "https://financialmodelingprep.com/api/v3"
 
+
+################################################################################
+# Financial Modeling Prep API
+################################################################################
 def get_financial_ratios(symbol: str) -> dict:
     """
     Retrieves the latest financial ratios for a given company.
@@ -79,10 +85,35 @@ def get_all_fundamentals(symbol: str) -> dict:
         "income_statement": get_income_statement(symbol)
     }
 
+################################################################################
+# Yahoo Finance API
+################################################################################
+def get_company_info(ticker: str) -> str:
+    """
+    Retrieves company information for a ticker using yfinance and converts it to JSON.
+    
+    Args:
+        ticker (str): The stock symbol (e.g., 'AAPL')
+        
+    Returns:
+        str: A formatted JSON string containing company information
+    """
+    stock = yf.Ticker(ticker)
+    info = stock.info
+    return json.dumps(info, indent=4)
+
+
 # Example usage
 if __name__ == "__main__":
+    tool = "yahoo_finance" # "financial_modeling_prep" or "yahoo_finance"
     API_KEY = os.getenv("FINN_API_KEY")
-    symbol = "AAPL"  # You can replace with MSFT, TSLA, etc.
-    data = get_all_fundamentals("AAPL")
-    import json
-    print(json.dumps(data, indent=2))  # Pretty print the JSON
+    symbol = "AAPL"
+
+    if tool == "financial_modeling_prep":
+        data = get_all_fundamentals("AAPL")
+        print(json.dumps(data, indent=2))
+    elif tool == "yahoo_finance":
+        data = get_company_info("AAPL")
+        print("\nCompany Info:")
+        print(data)
+

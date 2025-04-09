@@ -1,6 +1,9 @@
 import yfinance as yf
 import json
 
+################################################################################
+# Yahoo Finance API
+################################################################################
 def get_market_data(ticker: str, period: str = "5d", interval: str = "1d") -> str:
     """
     Retrieves historical market data for a ticker using yfinance and converts it to JSON.
@@ -39,27 +42,8 @@ def get_market_data(ticker: str, period: str = "5d", interval: str = "1d") -> st
 
     return json.dumps(json_data, indent=4)
 
-def get_company_info(ticker: str) -> str:
-    """
-    Retrieves company information for a ticker using yfinance and converts it to JSON.
-    
-    Args:
-        ticker (str): The stock symbol (e.g., 'AAPL')
-        
-    Returns:
-        str: A formatted JSON string containing company information
-    """
-    stock = yf.Ticker(ticker)
-    info = stock.info
-    return json.dumps(info, indent=4)
-
 # Example usage
 if __name__ == "__main__":
     # Example with 5-minute intervals for the last day
     json_result = get_market_data("AAPL", "1d", "5m")
     print(json_result)
-    
-    # Example of getting only company info
-    info_result = get_company_info("AAPL")
-    print("\nCompany Info:")
-    print(info_result)

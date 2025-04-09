@@ -5,6 +5,9 @@ import os
 
 load_dotenv()
 
+################################################################################
+# Finnhub API
+################################################################################
 def get_financial_news(symbol: str, api_key: str, max_articles: int = 5) -> str:
     """
     Retrieves financial news for a given stock symbol using the Finnhub API.

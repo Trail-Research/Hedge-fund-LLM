@@ -5,6 +5,9 @@ import os
 
 load_dotenv()
 
+################################################################################
+# Reddit API
+################################################################################
 def get_reddit_posts(keyword: str, post_limit: int = 10, comment_limit: int = 10) -> str:
     """
     Retrieves Reddit posts and comments related to a specific keyword from financial subreddits.
@@ -56,7 +59,9 @@ def get_reddit_posts(keyword: str, post_limit: int = 10, comment_limit: int = 10
 
     return json.dumps(result, indent=4)
 
+
 # Example usage
 if __name__ == "__main__":
+
     data = get_reddit_posts(keyword="AAPL", post_limit=40, comment_limit=0)
     print(data)
