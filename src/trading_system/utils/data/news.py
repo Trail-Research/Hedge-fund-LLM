@@ -8,7 +8,9 @@ load_dotenv()
 ################################################################################
 # Finnhub API
 ################################################################################
-def get_financial_news(symbol: str, api_key: str, max_articles: int = 5) -> str:
+FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY")
+
+def get_financial_news(symbol: str, max_articles: int = 5) -> str:
     """
     Retrieves financial news for a given stock symbol using the Finnhub API.
     
@@ -20,7 +22,7 @@ def get_financial_news(symbol: str, api_key: str, max_articles: int = 5) -> str:
     Returns:
         str: A JSON string containing the formatted news articles
     """
-    url = f"https://finnhub.io/api/v1/company-news?symbol={symbol}&from=2024-04-01&to=2025-04-05&token={api_key}"
+    url = f"https://finnhub.io/api/v1/company-news?symbol={symbol}&from=2024-04-01&to=2025-04-05&token={FINNHUB_API_KEY}"
     response = requests.get(url)
 
     if response.status_code != 200:

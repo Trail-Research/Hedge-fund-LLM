@@ -12,6 +12,8 @@ base_url = "https://financialmodelingprep.com/api/v3"
 ################################################################################
 # Financial Modeling Prep API
 ################################################################################
+FINN_API_KEY = os.getenv("FINN_API_KEY")
+
 def get_financial_ratios(symbol: str) -> dict:
     """
     Retrieves the latest financial ratios for a given company.
@@ -22,7 +24,7 @@ def get_financial_ratios(symbol: str) -> dict:
     Returns:
         dict: Financial ratios in TTM (Trailing Twelve Months) format
     """
-    url = f"{base_url}/ratios-ttm/{symbol}?apikey={API_KEY}"
+    url = f"{base_url}/ratios-ttm/{symbol}?apikey={FINN_API_KEY}"
     response = requests.get(url)
     return response.json()
 
@@ -36,7 +38,7 @@ def get_balance_sheet(symbol: str) -> dict:
     Returns:
         dict: Balance sheet data
     """
-    url = f"{base_url}/balance-sheet-statement/{symbol}?limit=1&apikey={API_KEY}"
+    url = f"{base_url}/balance-sheet-statement/{symbol}?limit=1&apikey={FINN_API_KEY}"
     response = requests.get(url)
     return response.json()
 
@@ -50,7 +52,7 @@ def get_income_statement(symbol: str) -> dict:
     Returns:
         dict: Income statement data
     """
-    url = f"{base_url}/income-statement/{symbol}?limit=1&apikey={API_KEY}"
+    url = f"{base_url}/income-statement/{symbol}?limit=1&apikey={FINN_API_KEY}"
     response = requests.get(url)
     return response.json()
 
@@ -64,7 +66,7 @@ def get_company_profile(symbol: str) -> dict:
     Returns:
         dict: Company profile data
     """
-    url = f"{base_url}/profile/{symbol}?apikey={API_KEY}"
+    url = f"{base_url}/profile/{symbol}?apikey={FINN_API_KEY}"
     response = requests.get(url)
     return response.json()
 
