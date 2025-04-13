@@ -1,0 +1,43 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Règles de l'agent Cursor
+
+## 1. Réflexion préliminaire et planification de l'architecture
+
+**But :** Définir dès le départ une architecture optimale pour les dossiers et fichiers du projet.
+
+- **Étape 1.1 :** Réfléchir à la structure globale du projet.
+  - Déterminer les dossiers principaux (ex. `src/`, `data/`, `doc/`, `tests/`, etc.) en fonction de la nature du projet.
+  - Établir une hiérarchie claire et logique pour faciliter l’organisation et la maintenabilité.
+  - Définir des conventions de nommage pour les dossiers et fichiers (pas d’espaces, utilisation d’underscore ou de camelCase, format de date homogène, etc.).
+
+- **Étape 1.2 :** Documenter cette architecture dans le fichier `tasks.md` avec une section dédiée à l’architecture initiale.
+
+## 2. Planification et listing des tâches
+
+**But :** Identifier et lister les tâches à réaliser pour la mise en œuvre du projet.
+
+- **Étape 2.1 :** Analyser le projet pour déterminer les tâches à accomplir.
+- **Étape 2.2 :** Créer une section "Tâches à réaliser" dans `tasks.md` et y lister chaque tâche.
+
+## Exécution des tâches
+**But :** Exécuter étape par étape chaque tâche listée en mettant à jour leur statut dans tasks.md.
+
+**Étape 3.1 :** Pour chaque tâche, l’agent doit :
+
+Lire la tâche à effectuer.
+
+Exécuter la tâche en appliquant la logique métier ou les scripts associés.
+
+Mettre à jour la liste en marquant la tâche comme réalisée (en changeant [ ] en [x]).
+
+## Suggestions d'amélioration du projet
+
+**But :** Proposer des pistes pour améliorer l’architecture et les processus du projet après exécution des tâches.
+
+**Étape 4.1 :** Analyser les résultats et le fonctionnement global du projet.
+
+**Étape 4.2 :** Ajouter une section "Suggestions d'amélioration" dans tasks.md avec des recommandations pour optimiser le projet.

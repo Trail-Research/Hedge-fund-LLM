@@ -4,7 +4,7 @@ import json
 ################################################################################
 # Yahoo Finance API
 ################################################################################
-def get_market_data(ticker: str, period: str = "5d", interval: str = "1d") -> str:
+def get_market_data(ticker: str, period: str = "20d", interval: str = "60m") -> str:
     """
     Retrieves historical market data for a ticker using yfinance and converts it to JSON.
     

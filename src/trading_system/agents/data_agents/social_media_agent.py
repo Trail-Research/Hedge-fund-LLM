@@ -20,7 +20,7 @@ class SocialMediaAgent:
         
         try:
             # Get Reddit posts for the given symbol
-            social_data = get_reddit_posts(keyword=stock_symbol, post_limit=10, comment_limit=5)
+            social_data = get_reddit_posts(keyword=stock_symbol, post_limit=50, comment_limit=0)
             
             # Analyze data with LLM
             analysis = self.llm_manager.analyze_social_sentiment(json.loads(social_data))
