@@ -1,8 +1,10 @@
 from src.trading_system.agents.data_agents.social_media_agent import SocialMediaAgent
 from src.trading_system.agents.data_agents.fundamentals_agent import FundamentalsAgent
-from src.trading_system.agents.data_agents.news_agent import NewsAgent
-from src.trading_system.agents.data_agents.market_agent import MarketAgent
+from trading_system.agents.news_analyst.news_agent import NewsAgent
+from trading_system.agents.market_agent.market_agent import MarketAgent
 from src.trading_system.utils.llm.llm_manager import LLMManager
+from trading_system.data_ingestion.reddit.sentiment_analyzer import RedditSentimentAnalyzer
+from trading_system.data_ingestion.news.sentiment_analyzer import NewsSentimentAnalyzer
 import json
 import sys
 
@@ -14,6 +16,8 @@ class Orchestrator:
         self.news_agent = NewsAgent()
         self.market_agent = MarketAgent()
         self.llm_manager = LLMManager()
+        self.reddit_analyzer = RedditSentimentAnalyzer()
+        self.news_analyzer = NewsSentimentAnalyzer()
 
     def process(self, stock_symbol: str) -> dict:
         """
@@ -59,11 +63,15 @@ class Orchestrator:
                 "market": market_result
             }
             
+            # Analyze sentiments using the specialized analyzers
+            social_sentiment = self.reddit_analyzer.analyze_sentiment(social_result["data"])
+            news_sentiment = self.news_analyzer.analyze_sentiment(news_result["data"])
+            
             # Generate final recommendation based on all analyses
             recommendation = self.llm_manager.generate_trading_recommendation({
                 "fundamentals": results["fundamentals"]["analysis"],
-                "social": results["social"]["analysis"],
-                "news": results["news"]["analysis"],
+                "social": social_sentiment,
+                "news": news_sentiment,
                 "market": results["market"]["analysis"]
             })
             

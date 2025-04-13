@@ -70,7 +70,7 @@ def get_company_profile(symbol: str) -> dict:
     response = requests.get(url)
     return response.json()
 
-def get_all_fundamentals(symbol: str) -> dict:
+def get_fundamentals_data(symbol: str) -> dict:
     """
     Retrieves all fundamental data for a given company.
     
