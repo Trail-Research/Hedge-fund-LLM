@@ -2,18 +2,28 @@ from src.trading_system.agents.data_agents.social_media_agent import SocialMedia
 from src.trading_system.agents.data_agents.fundamentals_agent import FundamentalsAgent
 from src.trading_system.agents.data_agents.news_agent import NewsAgent
 from src.trading_system.agents.data_agents.market_agent import MarketAgent
+from src.trading_system.agents.trader_agent import TraderAgent
+from src.trading_system.agents.risk_management_agent import RiskManagementAgent, RiskProfile
+from src.trading_system.agents.manager_agent import ManagerAgent
 from src.trading_system.utils.llm.llm_manager import LLMManager
 import json
 import sys
 
 class Orchestrator:
-    def __init__(self):
+    def __init__(self, risk_profile: RiskProfile = RiskProfile.NEUTRAL):
         # Initialize all data agents
         self.social_agent = SocialMediaAgent()
         self.fundamentals_agent = FundamentalsAgent()
         self.news_agent = NewsAgent()
         self.market_agent = MarketAgent()
+        
+        # Initialize decision making agents
+        self.trader_agent = TraderAgent()
+        self.risk_agent = RiskManagementAgent(risk_profile=risk_profile)
+        self.manager_agent = ManagerAgent()
+        
         self.llm_manager = LLMManager()
+        self.portfolio_state = {"available_capital": 1000000}  # Initialize with basic portfolio state
 
     def process(self, stock_symbol: str) -> dict:
         """
@@ -27,56 +37,91 @@ class Orchestrator:
         """
         print(f"[Orchestrator] Starting analysis for {stock_symbol}...")
         
-        # Process through each agent
-        social_result = json.loads(self.social_agent.process(stock_symbol))
-        fundamentals_result = json.loads(self.fundamentals_agent.process(stock_symbol))
-        news_result = json.loads(self.news_agent.process(stock_symbol))
-        market_result = json.loads(self.market_agent.process(stock_symbol))
-        
-        # Check for errors in agent results
-        errors = []
-        if "error" in social_result:
-            errors.append(f"Social Media: {social_result['error']}")
-        if "error" in fundamentals_result:
-            errors.append(f"Fundamentals: {fundamentals_result['error']}")
-        if "error" in news_result:
-            errors.append(f"News: {news_result['error']}")
-        if "error" in market_result:
-            errors.append(f"Market: {market_result['error']}")
-        
-        if errors:
-            return {
-                "error": "One or more agents encountered errors:",
-                "details": errors
-            }
-        
         try:
-            # Parse all results
+            # Step 1: Gather market data from all data agents
+            data_results = self._gather_market_data(stock_symbol)
+            if "error" in data_results:
+                return data_results
+            
+            # Step 2: Generate trading proposal from trader
+            trading_proposal = self.trader_agent.process(data_results)
+            if "error" in trading_proposal:
+                return trading_proposal
+            
+            # Step 3: Risk assessment
+            risk_assessment = self.risk_agent.process(
+                trading_proposal,
+                data_results.get("market", {})
+            )
+            if "error" in risk_assessment:
+                return risk_assessment
+            
+            # Step 4: Final decision from manager
+            final_decision = self.manager_agent.process(
+                trading_proposal,
+                risk_assessment,
+                self.portfolio_state
+            )
+            
+            # Combine all results
             results = {
+                "data_analysis": data_results,
+                "trading_proposal": trading_proposal,
+                "risk_assessment": risk_assessment,
+                "final_decision": final_decision
+            }
+            
+            print(f"[Orchestrator] Successfully processed all data for {stock_symbol}")
+            return results
+            
+        except Exception as e:
+            error_msg = f"Error in orchestration process: {str(e)}"
+            print(f"[Orchestrator] {error_msg}")
+            return {"error": error_msg}
+    
+    def _gather_market_data(self, stock_symbol: str) -> dict:
+        """Gather and combine data from all data agents."""
+        try:
+            social_result = json.loads(self.social_agent.process(stock_symbol))
+            fundamentals_result = json.loads(self.fundamentals_agent.process(stock_symbol))
+            news_result = json.loads(self.news_agent.process(stock_symbol))
+            market_result = json.loads(self.market_agent.process(stock_symbol))
+            
+            # Check for errors in agent results
+            errors = []
+            if "error" in social_result:
+                errors.append(f"Social Media: {social_result['error']}")
+            if "error" in fundamentals_result:
+                errors.append(f"Fundamentals: {fundamentals_result['error']}")
+            if "error" in news_result:
+                errors.append(f"News: {news_result['error']}")
+            if "error" in market_result:
+                errors.append(f"Market: {market_result['error']}")
+            
+            if errors:
+                return {
+                    "error": "One or more agents encountered errors:",
+                    "details": errors
+                }
+            
+            # Combine all data
+            return {
                 "social": social_result,
                 "fundamentals": fundamentals_result,
                 "news": news_result,
                 "market": market_result
             }
             
-            # Generate final recommendation based on all analyses
-            recommendation = self.llm_manager.generate_trading_recommendation({
-                "fundamentals": results["fundamentals"]["analysis"],
-                "social": results["social"]["analysis"],
-                "news": results["news"]["analysis"],
-                "market": results["market"]["analysis"]
-            })
-            
-            # Add recommendation to results
-            results["recommendation"] = recommendation
-            
-            print(f"[Orchestrator] Successfully processed all data for {stock_symbol}")
-            return results
-            
         except Exception as e:
-            error_msg = f"Error processing data: {str(e)}"
-            print(f"[Orchestrator] {error_msg}")
-            return {"error": error_msg}
+            return {"error": f"Error gathering market data: {str(e)}"}
+    
+    def update_portfolio_state(self, new_state: dict):
+        """Update the portfolio state with new information."""
+        self.portfolio_state.update(new_state)
+        
+    def set_risk_profile(self, risk_profile: RiskProfile):
+        """Update the risk profile for the trading system."""
+        self.risk_agent = RiskManagementAgent(risk_profile=risk_profile)
     
     def _analyze_social_sentiment(self, social_data: dict) -> str:
         """
