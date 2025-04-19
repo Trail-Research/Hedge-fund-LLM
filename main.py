@@ -1,23 +1,23 @@
-from src.trading_system.agents.orchestrator import Orchestrator
+from src.trading_system.agents.coordinator.trading_orchestrator import TradingOrchestrator
 import sys
 import json
 
 def main():
     """
-    Main function to test the orchestrator with a stock symbol.
-    Usage: python orchestrator.py <stock_symbol>
-    Example: python orchestrator.py AAPL
+    Main function to test the trading orchestrator with a stock symbol.
+    Usage: python main.py <stock_symbol>
+    Example: python main.py AAPL
     """
     if len(sys.argv) != 2:
-        print("Usage: python orchestrator.py <stock_symbol>")
-        print("Example: python orchestrator.py AAPL")
+        print("Usage: python main.py <stock_symbol>")
+        print("Example: python main.py AAPL")
         sys.exit(1)
     
     stock_symbol = sys.argv[1].upper()
     print(f"\n=== Starting analysis for {stock_symbol} ===\n")
     
-    orchestrator = Orchestrator()
-    results = orchestrator.process(stock_symbol)
+    orchestrator = TradingOrchestrator()
+    results = orchestrator.analyze_stock(stock_symbol)  # Changed from process() to analyze_stock()
     
     print("\n=== Analysis Results ===\n")
     
@@ -35,10 +35,13 @@ def main():
         if section == "recommendation":
             print("\n=== Trading Recommendation ===\n")
             print(data)
-        else:
+        elif section != "raw_data":  # Skip printing raw data unless specifically needed
             print(f"\n=== {section.capitalize()} Analysis ===\n")
-            if isinstance(data, dict) and "analysis" in data:
-                print(data["analysis"])
+            if isinstance(data, dict):
+                if "analysis" in data:
+                    print(data["analysis"])
+                if "sentiment_score" in data:
+                    print(f"Sentiment Score: {data['sentiment_score']}")
             else:
                 print(json.dumps(data, indent=2))
 
