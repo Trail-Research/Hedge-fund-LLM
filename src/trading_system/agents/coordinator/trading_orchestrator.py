@@ -1,4 +1,4 @@
-from ..fundamental_analyst.main import FundamentalAnalyst
+from ..fundamentals_analyst.main import FundamentalsAnalyst
 from ..sentiment_analyst.main import SentimentAnalyst
 from ..news_analyst.main import NewsAnalyst
 from ..market_analyst.main import MarketAnalyst
@@ -10,7 +10,7 @@ import json
 class TradingOrchestrator:
     def __init__(self):
         # Initialize all analysts
-        self.fundamental_analyst = FundamentalAnalyst()
+        self.fundamental_analyst = FundamentalsAnalyst()
         self.sentiment_analyst = SentimentAnalyst()
         self.news_analyst = NewsAnalyst()
         self.market_analyst = MarketAnalyst()
