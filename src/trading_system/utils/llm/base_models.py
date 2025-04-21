@@ -18,8 +18,7 @@ class BaseGroqModel:
             model_name=model_name,
             temperature=temperature,
             groq_api_key=os.getenv("GROQ_API_KEY"),
-            max_tokens=max_tokens,
-            top_p=top_p
+            max_tokens=max_tokens
         )
 
     def __call__(self, prompt: str, *args: Any, **kwargs: Any) -> str:
