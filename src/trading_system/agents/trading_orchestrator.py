@@ -3,7 +3,7 @@ from .news_analyst.main import NewsAnalyst
 from .market_analyst.main import MarketAnalyst
 from .trading_analyst.main import TradingAnalyst
 from .social_media_analyst.main import SocialMediaAnalyst
-from .sentiment_analyst.main import SentimentAnalyst
+from .news_analyst.main import NewsAnalyst
 import json
 
 class TradingOrchestrator:
@@ -31,23 +31,23 @@ class TradingOrchestrator:
         try:
             # Collect all analyses and raw data
             fundamentals_result = self.fundamental_analyst.invoke(stock_symbol)
-            sentiment_result = {"social_data": "TODO"}
+            social_reculs = self.social_media_analyzer.invoke(stock_symbol)
             news_result = self.news_analyst.invoke(stock_symbol)
             market_result = self.market_analyst.invoke(stock_symbol)
 
             # Additional sentiment analysis
-            social_sentiment = ""#elf.social_media_analyzer.analyze_sentiment(sentiment_result['social_data'])
-            news_sentiment = ""#self.news_analyzer.analyze_sentiment(news_result['news_data'])
+            # social_sentiment = self.social_media_analyzer.analyze_sentiment(social_reculs['social_data'])
+            # news_sentiment = self.news_analyzer.analyze_sentiment(news_result['news_data'])
 
             analyses = {
                 'fundamentals': fundamentals_result['analysis'],
                 'social': {
-                    'analysis': sentiment_result['analysis'],
-                    'sentiment_score': social_sentiment
+                    'analysis': social_reculs['analysis'],
+                    # 'sentiment_score': social_sentiment
                 },
                 'news': {
                     'analysis': news_result['analysis'],
-                    'sentiment_score': news_sentiment
+                    # 'sentiment_score': news_sentiment
                 },
                 'market': market_result['analysis'],
                 
@@ -57,7 +57,7 @@ class TradingOrchestrator:
                         'fundamentals_data': fundamentals_result['fundamentals_data'],
                         'company_info': fundamentals_result['company_info']
                     },
-                    'social': sentiment_result['social_data'],
+                    'social': social_reculs['social_data'],
                     'news': news_result['news_data'],
                     'market': market_result['market_data']
                 }
