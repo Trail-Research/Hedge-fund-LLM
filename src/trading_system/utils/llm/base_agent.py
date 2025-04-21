@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .llm import BaseGroqModel
+from .base_models import BaseGroqModel
 
 class BaseAgent(ABC):
     def __init__(self, temperature: float = 0.7):

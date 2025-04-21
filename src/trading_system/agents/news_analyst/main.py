@@ -1,6 +1,6 @@
 from trading_system.utils.llm.base_agent import BaseAgent
 from .prompts import NEWS_ANALYSIS_PROMPT
-from trading_system.data_ingestion.news import get_financial_news
+from trading_system.data_processing.news.finnhub import get_financial_news
 
 class NewsAnalyst(BaseAgent):
     def build_prompt(self, news_data: dict) -> str:

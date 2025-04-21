@@ -1,24 +1,22 @@
-from ..fundamentals_analyst.main import FundamentalsAnalyst
-from ..sentiment_analyst.main import SentimentAnalyst
-from ..news_analyst.main import NewsAnalyst
-from ..market_analyst.main import MarketAnalyst
-from ..trading_analyst.main import TradingAnalyst
-from ..sentiment_analyst.sentiment_analyzer import RedditSentimentAnalyzer
-from ..news_analyst.sentiment_analyzer import NewsSentimentAnalyzer
+from .fundamentals_analyst.main import FundamentalsAnalyst
+from .news_analyst.main import NewsAnalyst
+from .market_analyst.main import MarketAnalyst
+from .trading_analyst.main import TradingAnalyst
+from .social_media_analyst.main import SocialMediaAnalyst
+from .sentiment_analyst.main import SentimentAnalyst
 import json
 
 class TradingOrchestrator:
     def __init__(self):
         # Initialize all analysts
         self.fundamental_analyst = FundamentalsAnalyst()
-        self.sentiment_analyst = SentimentAnalyst()
         self.news_analyst = NewsAnalyst()
         self.market_analyst = MarketAnalyst()
         self.trading_analyst = TradingAnalyst()
         
         # Initialize sentiment analyzers
-        self.reddit_analyzer = RedditSentimentAnalyzer()
-        self.news_analyzer = NewsSentimentAnalyzer()
+        self.social_media_analyzer = SocialMediaAnalyst()
+        self.news_analyzer = NewsAnalyst()
 
     def analyze_stock(self, stock_symbol: str) -> dict:
         """
@@ -33,13 +31,13 @@ class TradingOrchestrator:
         try:
             # Collect all analyses and raw data
             fundamentals_result = self.fundamental_analyst.invoke(stock_symbol)
-            sentiment_result = self.sentiment_analyst.invoke(stock_symbol)
+            sentiment_result = {"social_data": "TODO"}
             news_result = self.news_analyst.invoke(stock_symbol)
             market_result = self.market_analyst.invoke(stock_symbol)
 
             # Additional sentiment analysis
-            social_sentiment = self.reddit_analyzer.analyze_sentiment(sentiment_result['social_data'])
-            news_sentiment = self.news_analyzer.analyze_sentiment(news_result['news_data'])
+            social_sentiment = ""#elf.social_media_analyzer.analyze_sentiment(sentiment_result['social_data'])
+            news_sentiment = ""#self.news_analyzer.analyze_sentiment(news_result['news_data'])
 
             analyses = {
                 'fundamentals': fundamentals_result['analysis'],

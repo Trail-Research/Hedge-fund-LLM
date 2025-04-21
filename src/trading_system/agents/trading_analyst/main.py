@@ -1,4 +1,4 @@
-from trading_system.utils.base_agent import BaseAgent
+from trading_system.utils.llm.base_agent import BaseAgent
 from .prompts import TRADING_RECOMMENDATION_PROMPT
 
 class TradingAnalyst(BaseAgent):

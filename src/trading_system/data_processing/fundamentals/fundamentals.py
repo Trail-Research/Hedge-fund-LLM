@@ -194,7 +194,7 @@ if __name__ == "__main__":
     symbol = "AAPL"
 
     if tool == "financial_modeling_prep":
-        data = get_all_fundamentals(symbol)
+        data = get_fundamentals_data(symbol)
         #print(json.dumps(data, indent=2))
         print(json.dumps(extract_key_metrics(data), indent=2))
     elif tool == "yahoo_finance":

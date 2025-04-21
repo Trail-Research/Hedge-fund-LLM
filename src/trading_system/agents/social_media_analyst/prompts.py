@@ -1,5 +1,5 @@
-SENTIMENT_ANALYSIS_PROMPT = """
-En tant qu'analyste de sentiment expert, analysez les discussions suivantes sur les réseaux sociaux :
+SOCIAL_MEDIA_ANALYSIS_PROMPT = """
+En tant qu'analyste de médias sociaux expert, analysez les discussions suivantes sur les réseaux sociaux :
 
 {social_data}
 

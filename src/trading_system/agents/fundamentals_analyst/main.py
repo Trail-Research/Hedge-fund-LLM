@@ -1,6 +1,6 @@
 from trading_system.utils.llm.base_agent import BaseAgent
 from .prompts import FUNDAMENTALS_ANALYSIS_PROMPT
-from trading_system.data_ingestion.fundamentals import get_fundamentals_data, get_company_info
+from trading_system.data_processing.fundamentals import get_fundamentals_data, get_company_info
 
 class FundamentalsAnalyst(BaseAgent):
     def build_prompt(self, fundamentals_data: dict, company_info: dict) -> str:

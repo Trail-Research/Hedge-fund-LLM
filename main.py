@@ -1,4 +1,4 @@
-from src.trading_system.agents.coordinator.trading_orchestrator import TradingOrchestrator
+from trading_system.agents.trading_orchestrator import TradingOrchestrator
 import sys
 import json
 
