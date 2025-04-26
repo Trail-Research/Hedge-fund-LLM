@@ -10,7 +10,8 @@ def get_mock_recommendation():
     Returns:
         str: A string containing the trading recommendation
     """
-    return """
+
+    recommendation = """
     Trading Recommendation for AAPL:
     
     Overall Recommendation: BUY
@@ -58,6 +59,21 @@ def get_mock_recommendation():
     Conclusion:
     AAPL represents a solid BUY opportunity for investors with a medium to long-term horizon. The company's strong fundamentals, positive sentiment across multiple data sources, and strategic initiatives position it well for continued success. While there are some risks to monitor, particularly around supply chain and valuation, the overall investment thesis remains compelling. Investors should consider dollar-cost averaging into the position to mitigate short-term volatility risks.
     """
+
+    order = {
+        "asset": "AAPL",
+        "action": "BUY",
+        "notional_amount": 3000,        # 3% d'un portefeuille de 100k$
+        "entry_price": 175.84,
+        "stop_loss": 169.78,
+        "target_price": 185.67,
+        "time_horizon_days": 180
+    }
+
+    return {
+        "recommendation": recommendation,
+        "order": order
+    }
 
 def test_trading_analyst(analyses: dict) -> str:
     """

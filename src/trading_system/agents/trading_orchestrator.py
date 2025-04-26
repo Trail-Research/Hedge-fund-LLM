@@ -10,11 +10,13 @@ from .market_analyst.test import test_market_analyst
 from .trading_analyst.test import test_trading_analyst
 from .social_media_analyst.test import test_social_media_analyst
 
+from .risk_team.pipeline import risk_management_pipeline
+
 import json
 import time
 
 class TradingOrchestrator:
-    def __init__(self, use_test_data=None):
+    def __init__(self, use_test_data=None, portfolio=None):
         """
         Initialize the TradingOrchestrator
         
@@ -39,6 +41,36 @@ class TradingOrchestrator:
         self.trading_analyst = TradingAnalyst()
         self.news_analyst = NewsAnalyst()
         self.social_media_analyzer = SocialMediaAnalyst()
+
+        # Portfolio = état courant du compte (valeur totale, exposures, levier…)
+        self.portfolio = portfolio or self._load_initial_portfolio()
+
+    def _load_initial_portfolio(self):
+        # TODO: charger le portefeuille depuis une base ou API
+        return {
+            "total_value": 100_000.0,      # Valeur totale du portefeuille
+            "cash": 50_000.0,              # Liquidités disponibles
+            "invested_value": 50_000.0,    # Déjà investi sur AAPL et MSFT
+            "invested_assets": {
+                "AAPL": 30_000.0,          # 30k$ sur Apple
+                "MSFT": 20_000.0,          # 20k$ sur Microsoft
+            },
+            "invested_sectors": {
+                "equities": 50_000.0,      # Tout est en actions
+            },
+            "get_exposure": lambda asset: (
+                30_000.0 if asset == "AAPL" else
+                20_000.0 if asset == "MSFT" else
+                0.0
+            ) / 100_000.0,   # Exposition d'un actif par rapport au total
+
+            "get_sector_exposure": lambda sector: (
+                50_000.0 if sector == "equities" else
+                0.0
+            ) / 100_000.0,   # Exposition du secteur actions
+
+            "get_total_notional": lambda: 50_000.0,  # Montant investi total
+        }
 
     def analyze_stock(self, stock_symbol: str) -> dict:
         """
@@ -116,6 +148,23 @@ class TradingOrchestrator:
                 recommendation = self.trading_analyst.invoke(analyses)
             analyses['recommendation'] = recommendation
             print("[TradingOrchestrator] Analysis completed successfully")
+
+            # --- Intégration Risk Management ---
+            order = recommendation.get("order")
+            if order:
+                print("[TradingOrchestrator] Running risk management checks...")
+                validated_order = risk_management_pipeline(
+                    order,
+                    self.portfolio,
+                    market_result["market_data"]
+                )
+                if validated_order is None:
+                    analyses['recommendation']['status'] = 'rejected_by_risk'
+                else:
+                    analyses['recommendation']['order'] = validated_order
+                    analyses['recommendation']['status'] = 'approved_by_risk'
+            else:
+                print("[TradingOrchestrator] No order to validate.")
 
             return analyses
 

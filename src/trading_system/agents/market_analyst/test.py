@@ -7,10 +7,10 @@ import json
 
 def get_mock_market_data():
     """
-    Returns a predetermined JSON string containing mock market data.
+    Returns a predetermined dictionary containing mock market data.
     
     Returns:
-        str: A JSON string containing mock market data
+        dict: A dictionary containing mock market data
     """
     mock_data = {
         "price_data": {
@@ -25,7 +25,9 @@ def get_mock_market_data():
             "pe_ratio": 28.5,
             "eps": 6.15,
             "dividend_yield": 0.52,
-            "beta": 1.28
+            "beta": 1.28,
+            "bid": 175.75,       # Ajouté: Bid price
+            "ask": 175.90        # Ajouté: Ask price (spread très serré)
         },
         "historical_data": {
             "1d": [174.79, 175.12, 175.45, 175.67, 175.84],
@@ -63,11 +65,17 @@ def get_mock_market_data():
                 "low": 150.00,
                 "average": 185.67,
                 "high": 210.00
-            }
+            },
+            "sector": "equities"
+        },
+        "volatility_data": {
+            "historical_volatility_1m": 0.015,  # 1.5% volatilité mensuelle
+            "historical_volatility_3m": 0.018,  # 1.8% volatilité trimestrielle
+            "historical_volatility_6m": 0.020   # 2.0% volatilité semestrielle
         }
     }
     
-    return json.dumps(mock_data, indent=4)
+    return mock_data
 
 def get_mock_analysis():
     """
