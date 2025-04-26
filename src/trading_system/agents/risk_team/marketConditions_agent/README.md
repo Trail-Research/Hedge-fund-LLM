@@ -1,1 +1,0 @@
-Vérifie la volatilité et la liquidité du marché avant l'entrée

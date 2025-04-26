@@ -20,7 +20,7 @@ class AgentRiskCompliance(RiskAgent):
 
             # 1) Nouvelle exposition sur l'actif
             asset = order["asset"]
-            current_price = market_data["price_data"]["current_price"]
+            current_price = market_data.get_price(asset)
             order_value = order.get("notional_amount", current_price * order.get("quantity", 0))
 
             current_asset_value = portfolio["invested_assets"].get(asset, 0)
@@ -30,7 +30,7 @@ class AgentRiskCompliance(RiskAgent):
                         f"Nouvelle exposition {new_asset_pct:.2%} > {self.max_asset_pct:.2%} max actif")
 
             # 2) Exposition par secteur
-            sector = market_data["sector"] if "sector" in market_data else "unknown"
+            sector = market_data.get_sector(asset)
             if sector in self.max_sector_pct:
                 current_sector_value = portfolio["invested_sectors"].get(sector, 0)
                 new_sector_pct = (current_sector_value + order_value) / total_value
@@ -47,6 +47,7 @@ class AgentRiskCompliance(RiskAgent):
                         f"Levier actuel {current_leverage:.2f}x > {self.max_leverage:.2f}x max")
 
             return (True, order, "Compliance rules OK")
-        
+
         except Exception as e:
             return (False, order, f"Erreur dans Compliance check: {str(e)}")
+

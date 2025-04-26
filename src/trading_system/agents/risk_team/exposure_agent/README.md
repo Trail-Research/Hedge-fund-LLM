@@ -1,1 +1,0 @@
-	Vérifie la taille de la position, l'exposition globale du portefeuille

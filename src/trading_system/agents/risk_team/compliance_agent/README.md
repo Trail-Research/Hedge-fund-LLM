@@ -1,1 +1,0 @@
-	Vérifie des règles spécifiques (ex: pas plus de 10 % sur une seule valeur)

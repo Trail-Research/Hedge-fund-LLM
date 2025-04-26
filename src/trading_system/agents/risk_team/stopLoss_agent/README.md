@@ -1,1 +1,0 @@
-Calcule et impose des stop-loss et take-profit automatiques

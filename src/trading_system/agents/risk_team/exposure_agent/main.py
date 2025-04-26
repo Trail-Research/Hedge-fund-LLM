@@ -7,8 +7,8 @@ class AgentRiskExposure(RiskAgent):
 
     def check(self, order, portfolio, market_data):
         try:
-            # Récupère la valeur actuelle de l'actif
-            current_price = market_data["price_data"]["current_price"]
+            # Récupère la valeur actuelle de l'actif via MockMarketData
+            current_price = market_data.get_price(order["asset"])
             asset_value = order.get("notional_amount", current_price * order.get("quantity", 0))
             
             total_capital = portfolio["total_value"]
@@ -17,7 +17,11 @@ class AgentRiskExposure(RiskAgent):
             new_exposure_pct = (current_exposure + asset_value) / total_capital
 
             if new_exposure_pct > self.max_exposure_per_asset:
-                return (False, order, f"Exceeds exposure limit for {order['asset']} ({new_exposure_pct:.2%} > {self.max_exposure_per_asset:.2%})")
+                return (
+                    False,
+                    order,
+                    f"Exceeds exposure limit for {order['asset']} ({new_exposure_pct:.2%} > {self.max_exposure_per_asset:.2%})"
+                )
             
             return (True, order, "Exposure OK")
         

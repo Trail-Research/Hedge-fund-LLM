@@ -1,9 +1,10 @@
+from trading_system.agents.market_analyst.test import MockMarketData
 from trading_system.agents.risk_team.marketConditions_agent.main import AgentRiskMarketConditions
 from trading_system.agents.risk_team.exposure_agent.main import AgentRiskExposure
 from trading_system.agents.risk_team.stopLoss_agent.main import AgentRiskStopLoss
 from trading_system.agents.risk_team.compliance_agent.main import AgentRiskCompliance
 
-def risk_management_pipeline(order, portfolio, market_data):
+def risk_management_pipeline(order, portfolio, mock_data_dict):
     agents = [
         AgentRiskExposure(max_exposure_per_asset=0.4),  # 40% max par actif
         AgentRiskMarketConditions(max_volatility=0.03, max_spread=0.001),
@@ -14,6 +15,9 @@ def risk_management_pipeline(order, portfolio, market_data):
             max_leverage=2.0
         ),
     ]
+
+    market_data = MockMarketData(mock_data_dict)
+
     for agent in agents:
         valid, order, reason = agent.check(order, portfolio, market_data)
         if not valid:
