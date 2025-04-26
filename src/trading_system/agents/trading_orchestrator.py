@@ -26,11 +26,11 @@ class TradingOrchestrator:
         """
         # Default to using real API for all components if not specified
         self.use_test_data = use_test_data or {
-            'fundamentals': False,
+            'fundamentals': True,
             'social': True,
-            'news': False,
-            'market': False,
-            'trading': False
+            'news': True,
+            'market': True,
+            'trading': True
         }
         
         # Initialize all analysts (only used when not using test data)
@@ -55,7 +55,7 @@ class TradingOrchestrator:
             
             # Collect all analyses and raw data
             print("[TradingOrchestrator] Fetching fundamentals data...")
-            if self.use_test_data.get('fundamentals', False):
+            if self.use_test_data.get('fundamentals', default=False):
                 print("[TradingOrchestrator] Using test data for fundamentals analysis")
                 fundamentals_result = test_fundamentals_analyst(stock_symbol)
             else:
@@ -63,7 +63,7 @@ class TradingOrchestrator:
             print("[TradingOrchestrator] Fundamentals data fetched successfully")
             
             print("[TradingOrchestrator] Fetching social media data...")
-            if self.use_test_data.get('social', False):
+            if self.use_test_data.get('social', default=False):
                 print("[TradingOrchestrator] Using test data for social media analysis")
                 social_results = test_social_media_analyst(stock_symbol)
             else:
@@ -71,7 +71,7 @@ class TradingOrchestrator:
             print("[TradingOrchestrator] Social media data fetched successfully")
             
             print("[TradingOrchestrator] Fetching news data...")
-            if self.use_test_data.get('news', False):
+            if self.use_test_data.get('news', default=False):
                 print("[TradingOrchestrator] Using test data for news analysis")
                 news_result = test_news_analyst(stock_symbol)
             else:
@@ -79,7 +79,7 @@ class TradingOrchestrator:
             print("[TradingOrchestrator] News data fetched successfully")
             
             print("[TradingOrchestrator] Fetching market data...")
-            if self.use_test_data.get('market', False):
+            if self.use_test_data.get('market', default=False):
                 print("[TradingOrchestrator] Using test data for market analysis")
                 market_result = test_market_analyst(stock_symbol)
             else:
