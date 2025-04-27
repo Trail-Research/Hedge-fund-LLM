@@ -16,10 +16,8 @@ def risk_management_pipeline(order, portfolio, mock_data_dict):
         ),
     ]
 
-    market_data = MockMarketData(mock_data_dict)
-
     for agent in agents:
-        valid, order, reason = agent.check(order, portfolio, market_data)
+        valid, order, reason = agent.check(order, portfolio, mock_data_dict)
         if not valid:
             print(f"[{agent.__class__.__name__}] Order rejected: {reason}")
             return None

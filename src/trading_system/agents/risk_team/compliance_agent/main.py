@@ -1,3 +1,4 @@
+from trading_system.agents.market_analyst.get_market_data import GetMarketData
 from trading_system.agents.risk_team.riskAgent import RiskAgent
 
 
@@ -14,6 +15,9 @@ class AgentRiskCompliance(RiskAgent):
         self.max_leverage = max_leverage
 
     def check(self, order, portfolio, market_data):
+
+        market_data = GetMarketData(market_data)
+        
         try:
             total_value = portfolio["total_value"]
             cash = portfolio.get("cash", 0)

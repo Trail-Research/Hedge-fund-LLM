@@ -1,3 +1,4 @@
+from trading_system.agents.market_analyst.get_market_data import GetMarketData
 from trading_system.agents.risk_team.riskAgent import RiskAgent
 
 
@@ -6,6 +7,9 @@ class AgentRiskExposure(RiskAgent):
         self.max_exposure_per_asset = max_exposure_per_asset  # 10% du capital max par actif
 
     def check(self, order, portfolio, market_data):
+
+        market_data = GetMarketData(market_data)
+        
         try:
             # Récupère la valeur actuelle de l'actif via MockMarketData
             current_price = market_data.get_price(order["asset"])

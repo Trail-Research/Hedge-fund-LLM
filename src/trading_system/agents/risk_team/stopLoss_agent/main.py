@@ -1,3 +1,4 @@
+from trading_system.agents.market_analyst.get_market_data import GetMarketData
 from trading_system.agents.risk_team.riskAgent import RiskAgent
 
 
@@ -6,6 +7,9 @@ class AgentRiskStopLoss(RiskAgent):
         self.default_stop_loss_percent = default_stop_loss_percent
 
     def check(self, order, portfolio, market_data):
+
+        market_data = GetMarketData(market_data)
+        
         try:
             current_price = market_data.get_price(order["asset"])
             

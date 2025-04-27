@@ -1,3 +1,4 @@
+from trading_system.agents.market_analyst.get_market_data import GetMarketData
 from trading_system.agents.risk_team.riskAgent import RiskAgent
 
 
@@ -12,6 +13,9 @@ class AgentRiskMarketConditions(RiskAgent):
         self.max_spread = max_spread
 
     def check(self, order, portfolio, market_data):
+
+        market_data = GetMarketData(market_data)
+        
         try:
             asset = order["asset"]
 
