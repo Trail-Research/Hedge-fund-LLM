@@ -96,38 +96,44 @@ em {{ font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: {
 [data-baseweb="tab"] {{ font: 400 11px/1.5 'IBM Plex Mono', monospace !important; letter-spacing: 1.4px; text-transform: uppercase; padding-inline: 0; }}
 [data-baseweb="tab-highlight"] {{ background: {FOREST}; }}
 
-/* Panneau pipeline, inspiré du bloc « signal » du site */
-.tr-panel {{ position: relative; background: #17382e; color: #c3d0c3; padding: 22px 24px 18px; overflow: hidden; box-shadow: 0 12px 28px #1a302907; }}
+/* Graphe des agents, inspiré du bloc « signal » du site */
+.tr-panel {{ position: relative; background: #17382e; color: #c3d0c3; padding: 22px 26px 18px; margin-top: 56px; overflow: hidden; box-shadow: 0 12px 28px #1a302907; }}
 .tr-panel-top {{ position: relative; display: flex; justify-content: space-between; font: 400 10px/1.5 'IBM Plex Mono', monospace; letter-spacing: 1.6px; color: #a0b0a2; }}
-.tr-panel svg.tr-terrain {{ position: absolute; inset: 0; width: 100%; height: 100%; }}
-.tr-signal-path {{ stroke-dasharray: 700; animation: tr-trace 1.8s ease-out both; }}
-@keyframes tr-trace {{ from {{ stroke-dashoffset: 700; }} to {{ stroke-dashoffset: 0; }} }}
-.tr-flow {{ position: relative; display: grid; grid-template-columns: minmax(0,1.1fr) auto minmax(0,0.8fr) auto minmax(0,1.1fr); gap: 10px; align-items: center; margin-top: 26px; }}
-.tr-col {{ display: flex; flex-direction: column; gap: 8px; }}
-.tr-arrow {{ font: 18px 'IBM Plex Mono', monospace; color: #6f8f7f; }}
-.tr-node {{ display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; border: 1px solid #ffffff1c; background: #ffffff08; transition: all .3s; }}
-.tr-node .dot {{ width: 8px; height: 8px; border-radius: 50%; background: #4d6a5d; flex-shrink: 0; }}
-.tr-node .name {{ font-size: 13px; line-height: 1.3; color: #c3d0c3; flex: 1 1 auto; min-width: 0; word-break: keep-all; }}
-.tr-node .state {{ font: 400 9px/1 'IBM Plex Mono', monospace; letter-spacing: 1.2px; color: #7f978a; white-space: nowrap; }}
-.tr-node.is-running {{ border-color: {SAGE}88; background: #d3e6bf14; }}
-.tr-node.is-running .dot {{ background: {SAGE}; animation: tr-pulse 1s ease-in-out infinite; }}
-.tr-node.is-running .state {{ color: {SAGE}; }}
-.tr-node.is-done .dot {{ background: {SAGE}; }}
-.tr-node.is-done .name {{ color: #fff; }}
-.tr-node.is-done .state {{ color: {SAGE}; }}
-.tr-node.is-rejected, .tr-node.is-error {{ border-color: #e0957a88; }}
-.tr-node.is-rejected .dot, .tr-node.is-error .dot {{ background: #e0957a; }}
-.tr-node.is-rejected .state, .tr-node.is-error .state {{ color: #e0957a; }}
-.tr-node.big {{ padding: 18px 14px; }}
-.tr-node.sub {{ padding: 6px 10px; margin-left: 12px; }}
-.tr-node.sub .state {{ display: none; }}
-.tr-node.big {{ flex-direction: column; align-items: flex-start; gap: 8px; }}
-.tr-node.sub .name {{ font-size: 12px; }}
-@keyframes tr-pulse {{ 0%, 100% {{ box-shadow: 0 0 0 0 {SAGE}88; }} 50% {{ box-shadow: 0 0 0 6px {SAGE}00; }} }}
-@media (max-width: 1180px) {{ .tr-flow {{ grid-template-columns: 1fr; }} .tr-arrow {{ transform: rotate(90deg); justify-self: center; line-height: 1; }} }}
-.tr-ticker {{ position: relative; margin-top: 22px; padding-top: 12px; border-top: 1px solid #ffffff1c; font: 400 11px/1.7 'IBM Plex Mono', monospace; color: #8fa596; min-height: 62px; }}
+.tr-graph {{ position: relative; width: 100%; height: auto; margin-top: 10px; overflow: visible; }}
+.tr-graph text {{ font-family: 'IBM Plex Sans', Arial, sans-serif; }}
+.tr-graph .col-label, .tr-graph .edge-label, .tr-graph .state {{ font-family: 'IBM Plex Mono', monospace; letter-spacing: 1.4px; }}
+.tr-graph .col-label {{ font-size: 10px; fill: #7f978a; }}
+.tr-graph .edge-label {{ font-size: 9px; fill: #8fa596; }}
+.tr-graph .group {{ fill: #ffffff05; stroke: #ffffff26; stroke-dasharray: 4 5; }}
+.tr-graph .node rect {{ fill: #ffffff08; stroke: #ffffff1f; transition: all .3s; }}
+.tr-graph .node .name {{ font-size: 15px; fill: #c3d0c3; }}
+.tr-graph .node .state {{ font-size: 9px; fill: #7f978a; }}
+.tr-graph .node .dot {{ fill: #4d6a5d; }}
+.tr-graph .node .halo {{ fill: none; stroke: {SAGE}; opacity: 0; }}
+.tr-graph .node.is-running rect {{ fill: #d3e6bf14; stroke: {SAGE}99; }}
+.tr-graph .node.is-running .dot, .tr-graph .node.is-done .dot {{ fill: {SAGE}; }}
+.tr-graph .node.is-running .halo {{ animation: tr-halo 1.1s ease-out infinite; }}
+.tr-graph .node.is-running .state, .tr-graph .node.is-done .state {{ fill: {SAGE}; }}
+.tr-graph .node.is-done .name {{ fill: #fff; }}
+.tr-graph .node.is-done rect {{ stroke: #d3e6bf55; }}
+.tr-graph .node.is-rejected rect, .tr-graph .node.is-error rect {{ stroke: #e0957a99; fill: #e0957a12; }}
+.tr-graph .node.is-rejected .dot, .tr-graph .node.is-error .dot {{ fill: #e0957a; }}
+.tr-graph .node.is-rejected .state, .tr-graph .node.is-error .state {{ fill: #e0957a; }}
+.tr-graph .node.output.is-done rect {{ fill: {SAGE}; stroke: {SAGE}; }}
+.tr-graph .node.output.is-done .name, .tr-graph .node.output.is-done .state {{ fill: {FOREST}; }}
+.tr-graph .node.output.is-done .dot {{ fill: {FOREST}; }}
+@keyframes tr-halo {{ from {{ r: 5px; opacity: .9; }} to {{ r: 16px; opacity: 0; }} }}
+.tr-graph .edge {{ fill: none; stroke-width: 1.6; transition: stroke .3s; }}
+.tr-graph .edge.idle {{ stroke: #ffffff24; stroke-dasharray: 3 6; }}
+.tr-graph .edge.ready {{ stroke: #d3e6bf66; }}
+.tr-graph .edge.done {{ stroke: #d3e6bfb3; }}
+.tr-graph .edge.active {{ stroke: {SAGE}; stroke-width: 2.2; stroke-dasharray: 7 7; animation: tr-flow .6s linear infinite; }}
+.tr-graph .edge.ko {{ stroke: #e0957a; stroke-width: 2; }}
+@keyframes tr-flow {{ to {{ stroke-dashoffset: -14; }} }}
+.tr-ticker {{ position: relative; margin-top: 14px; padding-top: 12px; border-top: 1px solid #ffffff1c; font: 400 11px/1.7 'IBM Plex Mono', monospace; color: #8fa596; min-height: 62px; }}
 .tr-ticker div:last-child {{ color: {SAGE}; }}
 .tr-ticker div {{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+@media (max-width: 760px) {{ .tr-panel {{ padding: 16px 12px; }} .tr-graph .node .state, .tr-graph .edge-label {{ display: none; }} }}
 
 /* Résultats */
 .tr-section {{ margin-top: 64px; }}
@@ -292,7 +298,7 @@ def run_live(stock_symbol, use_test_data, panel):
 # --- Pipeline -------------------------------------------------------------
 
 STATE_LABELS = {
-    "waiting": "—",
+    "waiting": "EN ATTENTE",
     "running": "EN COURS",
     "done": "OK",
     "rejected": "REJETÉ",
@@ -300,38 +306,112 @@ STATE_LABELS = {
     "skipped": "AUCUN ORDRE",
 }
 
+# Géométrie du graphe (unités du viewBox 1200 x 410)
+NODE_H = 54
+ROWS = [50, 140, 230, 320]                      # haut des nœuds des colonnes analystes / risque
+ANALYSTS_X, ANALYSTS_W = 30, 220
+TRADER_X, TRADER_W, TRADER_Y, TRADER_H = 370, 190, 167, 90
+RISK_X, RISK_W = 690, 230
+OUTPUT_X, OUTPUT_W = 1010, 160
+MID_Y = TRADER_Y + TRADER_H / 2
 
-def node(name, status, extra_class=""):
+
+def svg_node(x, y, w, h, name, status, extra_class="", state_label=None):
+    label = state_label or STATE_LABELS.get(status, "")
+    cy = y + h / 2
     return (
-        f'<div class="tr-node is-{status} {extra_class}"><span class="dot"></span>'
-        f'<span class="name">{name}</span><span class="state">{STATE_LABELS.get(status, "")}</span></div>'
+        f'<g class="node is-{status} {extra_class}">'
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}"/>'
+        f'<circle class="halo" cx="{x + 20}" cy="{cy}" r="5"/>'
+        f'<circle class="dot" cx="{x + 20}" cy="{cy}" r="5"/>'
+        f'<text class="name" x="{x + 36}" y="{cy - 2}">{name}</text>'
+        f'<text class="state" x="{x + 36}" y="{cy + 15}">{label}</text>'
+        f"</g>"
     )
+
+
+def edge_status(source, target):
+    if source not in ("done", "rejected"):
+        return "idle"
+    if target in ("rejected", "error"):
+        return "ko"
+    if target == "running":
+        return "active"
+    if target in ("done", "skipped"):
+        return "done"
+    return "ready"
+
+
+def svg_edge(path, status):
+    """Lien entre deux agents ; un point parcourt le lien pendant que la cible travaille."""
+    edge = f'<path class="edge {status}" d="{path}" marker-end="url(#tr-arrow-{status})"/>'
+    if status == "active":
+        edge += f'<circle r="4" fill="{SAGE}"><animateMotion dur="1.1s" repeatCount="indefinite" path="{path}"/></circle>'
+    return edge
 
 
 def pipeline_html(stock_symbol, state):
-    steps = state["steps"]
-    analysts = "".join(node(COMPONENTS[key], steps[key]) for key in ["fundamentals", "social", "news", "market"])
-    risk_checks = "".join(
-        node(label, state["risk"][agent][0], "sub") for agent, label in RISK_AGENTS.items()
+    steps, risk = state["steps"], state["risk"]
+    risk_agents = list(RISK_AGENTS)
+    output_status = {"done": "done", "rejected": "rejected", "skipped": "skipped", "error": "error"}.get(steps["risk"], "waiting")
+    output_label = {"done": "VALIDÉ", "rejected": "REJETÉ", "skipped": "AUCUN"}.get(output_status)
+
+    markers = "".join(
+        f'<marker id="tr-arrow-{name}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
+        f'<path d="M0 1 9 5 0 9z" fill="{color}"/></marker>'
+        for name, color in [("idle", "#ffffff40"), ("ready", "#d3e6bf80"), ("done", "#d3e6bfcc"), ("active", SAGE), ("ko", "#e0957a")]
     )
+
+    edges = []
+    # Analystes -> Trader
+    for key, top in zip(["fundamentals", "social", "news", "market"], ROWS):
+        cy = top + NODE_H / 2
+        x0, x1 = ANALYSTS_X + ANALYSTS_W, TRADER_X - 4
+        edges.append(svg_edge(f"M{x0} {cy} C{x0 + 70} {cy} {x1 - 70} {MID_Y} {x1} {MID_Y}", edge_status(steps[key], steps["trading"])))
+    # Trader -> premier contrôle de risque
+    first_cy = ROWS[0] + NODE_H / 2
+    x0, x1 = TRADER_X + TRADER_W, RISK_X - 4
+    edges.append(svg_edge(f"M{x0} {MID_Y} C{x0 + 70} {MID_Y} {x1 - 70} {first_cy} {x1} {first_cy}", edge_status(steps["trading"], risk[risk_agents[0]][0])))
+    # Chaîne des contrôles de risque (exécutés l'un après l'autre)
+    center_x = RISK_X + RISK_W / 2
+    for i in range(len(risk_agents) - 1):
+        y0, y1 = ROWS[i] + NODE_H, ROWS[i + 1] - 4
+        edges.append(svg_edge(f"M{center_x} {y0} L{center_x} {y1}", edge_status(risk[risk_agents[i]][0], risk[risk_agents[i + 1]][0])))
+    # Dernier contrôle -> Ordre
+    last_cy = ROWS[-1] + NODE_H / 2
+    x0, x1 = RISK_X + RISK_W, OUTPUT_X - 4
+    edges.append(svg_edge(f"M{x0} {last_cy} C{x0 + 60} {last_cy} {x1 - 60} {MID_Y} {x1} {MID_Y}", edge_status(risk[risk_agents[-1]][0], output_status)))
+
+    nodes = [
+        svg_node(ANALYSTS_X, top, ANALYSTS_W, NODE_H, COMPONENTS[key], steps[key])
+        for key, top in zip(["fundamentals", "social", "news", "market"], ROWS)
+    ]
+    nodes.append(svg_node(TRADER_X, TRADER_Y, TRADER_W, TRADER_H, "Trader", steps["trading"]))
+    nodes += [
+        svg_node(RISK_X, top, RISK_W, NODE_H, RISK_AGENTS[agent], risk[agent][0])
+        for agent, top in zip(risk_agents, ROWS)
+    ]
+    nodes.append(svg_node(OUTPUT_X, TRADER_Y, OUTPUT_W, TRADER_H, "Ordre", output_status, "output", output_label))
+
     done = sum(status in ("done", "skipped") for status in steps.values())
     logs = "".join(f"<div>&gt; {line}</div>" for line in state["logs"][-3:]) or "<div>&gt; En attente d'une analyse…</div>"
     return f"""
 <div class="tr-panel">
-<svg class="tr-terrain" viewBox="0 0 560 470" preserveAspectRatio="none" fill="none" aria-hidden="true">
-<defs><pattern id="tr-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="#729284" stroke-opacity=".15" stroke-width=".6"/></pattern></defs>
-<path d="M0 0h560v470H0z" fill="url(#tr-grid)"/>
-<path d="M-60 390C70 510 130 190 280 265S420 135 620 90" stroke="#729284" stroke-opacity=".25"/>
-<path class="tr-signal-path" d="M65 419 137 385 188 399 240 333 291 354 351 260 397 276 468 179" stroke="{SAGE}" stroke-opacity=".35" stroke-width="2" stroke-linejoin="round"/>
+<div class="tr-panel-top"><span>TR / PIPELINE DES AGENTS · {stock_symbol or "—"}</span><span>{done:02d} — {len(steps):02d}</span></div>
+<svg class="tr-graph" viewBox="0 0 1200 410" aria-label="Graphe des agents">
+<defs>{markers}<pattern id="tr-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#729284" stroke-opacity=".12" stroke-width=".6"/></pattern></defs>
+<rect x="-30" y="-20" width="1260" height="450" fill="url(#tr-grid)"/>
+<rect class="group" x="{RISK_X - 18}" y="14" width="{RISK_W + 36}" height="{ROWS[-1] + NODE_H + 18 - 14}"/>
+<text class="col-label" x="{ANALYSTS_X}" y="34">01 · ANALYSTES</text>
+<text class="col-label" x="{TRADER_X}" y="{TRADER_Y - 16}">02 · TRADER</text>
+<text class="col-label" x="{RISK_X}" y="34">03 · ÉQUIPE RISQUE</text>
+<text class="col-label" x="{OUTPUT_X}" y="{TRADER_Y - 16}">04 · SORTIE</text>
+<text class="edge-label" x="{(ANALYSTS_X + ANALYSTS_W + TRADER_X) / 2}" y="{ROWS[-1] + NODE_H + 30}" text-anchor="middle">RAPPORTS D'ANALYSE</text>
+<text class="edge-label" x="{(TRADER_X + TRADER_W + RISK_X) / 2}" y="{MID_Y + 40}" text-anchor="middle">ORDRE PROPOSÉ</text>
+<text class="edge-label" x="{(RISK_X + RISK_W + OUTPUT_X) / 2}" y="{MID_Y + 72}" text-anchor="middle">VERDICT</text>
+{"".join(edges)}
+{"".join(nodes)}
 </svg>
-<div class="tr-panel-top"><span>TR / PIPELINE · {stock_symbol or "—"}</span><span>{done:02d} — {len(steps):02d}</span></div>
-<div class="tr-flow">
-<div class="tr-col">{analysts}</div>
-<div class="tr-arrow">→</div>
-<div class="tr-col">{node("Trader", steps["trading"], "big")}</div>
-<div class="tr-arrow">→</div>
-<div class="tr-col">{node("Équipe risque", steps["risk"])}{risk_checks}</div>
-</div>
 <div class="tr-ticker">{logs}</div>
 </div>
 """.replace("\n", "")
@@ -676,14 +756,14 @@ def main():
 </div>
 """)
 
-    hero_left, hero_right = st.columns([1, 1.3], gap="large")
+    hero_left, hero_right = st.columns([1.25, 1], gap="large", vertical_alignment="bottom")
     with hero_left:
         html("""
 <div class="tr-eyebrow">Intelligence de marché</div>
 <div class="tr-hero-title">Neuf agents. <em>Une décision.</em></div>
 <div class="tr-hero-text">Fondamentaux, marché, actualités et réseaux sociaux sont analysés par des agents LLM spécialisés, puis un trader propose un ordre que l'équipe risque valide ou rejette.</div>
 """)
-        st.write("")
+    with hero_right:
         col_symbol, col_sources = st.columns([1.3, 1])
         with col_symbol:
             stock_symbol = st.text_input("Symbole", value="AAPL", label_visibility="collapsed", placeholder="Symbole, ex. AAPL").strip().upper()
@@ -692,15 +772,14 @@ def main():
                 st.caption("Cochées : données simulées. Décochées : APIs réelles (clés requises dans .env).")
                 use_test_data = {key: st.checkbox(label, value=True, key=f"test_{key}") for key, label in COMPONENTS.items()}
         launch = st.button("Lancer l'analyse  ↗", type="primary", width="stretch")
-        html('<div class="tr-footnote"><b>+</b>Mode démo par défaut : aucune clé API nécessaire.</div>')
+        html('<div class="tr-footnote" style="margin-top:14px"><b>+</b>Mode démo par défaut : aucune clé API nécessaire.</div>')
 
-    with hero_right:
-        panel = st.empty()
-        saved = st.session_state.get("result")
-        if saved:
-            panel.markdown(pipeline_html(saved["symbol"], saved["state"]), unsafe_allow_html=True)
-        else:
-            panel.markdown(pipeline_html(stock_symbol, initial_state()), unsafe_allow_html=True)
+    panel = st.empty()
+    saved = st.session_state.get("result")
+    if saved:
+        panel.markdown(pipeline_html(saved["symbol"], saved["state"]), unsafe_allow_html=True)
+    else:
+        panel.markdown(pipeline_html(stock_symbol, initial_state()), unsafe_allow_html=True)
 
     if launch:
         if not stock_symbol:
