@@ -1,4 +1,3 @@
-from trading_system.agents.market_analyst.test import MockMarketData
 from trading_system.agents.risk_team.marketConditions_agent.main import AgentRiskMarketConditions
 from trading_system.agents.risk_team.exposure_agent.main import AgentRiskExposure
 from trading_system.agents.risk_team.stopLoss_agent.main import AgentRiskStopLoss
@@ -21,4 +20,5 @@ def risk_management_pipeline(order, portfolio, mock_data_dict):
         if not valid:
             print(f"[{agent.__class__.__name__}] Order rejected: {reason}")
             return None
+        print(f"[{agent.__class__.__name__}] Order approved: {reason}")
     return order
