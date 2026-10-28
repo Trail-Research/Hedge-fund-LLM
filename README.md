@@ -121,6 +121,14 @@ python main.py GOOGL
 python main.py TSLA
 ```
 
+### Interface de Démo
+
+```bash
+streamlit run app.py
+```
+
+L'interface s'ouvre dans le navigateur : saisissez un symbole, choisissez pour chaque composant entre données simulées (par défaut, aucune clé API requise) et APIs réelles, puis lancez l'analyse. Elle affiche la recommandation, l'ordre et sa validation par l'équipe risque, le portefeuille, chaque analyse, les données brutes et le journal d'exécution.
+
 ### Utilisation Programmatique
 
 ```python
