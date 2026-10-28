@@ -28,7 +28,7 @@ MOSS = "#66805a"
 NEGATIVE = "#b5654a"
 PALETTE = ["#193f34", "#66805a", "#a5b89a", "#d3e6bf", "#d9e0cd"]
 
-STEP_DELAY = 1.1  # Pause entre deux étapes du pipeline, pour que la démo reste lisible
+STEP_DELAY = 0.75  # Pause entre deux étapes du pipeline, pour que la démo reste lisible
 
 COMPONENTS = {
     "fundamentals": "Fondamentaux",
