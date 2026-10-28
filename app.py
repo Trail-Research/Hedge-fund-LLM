@@ -28,7 +28,7 @@ MOSS = "#66805a"
 NEGATIVE = "#b5654a"
 PALETTE = ["#193f34", "#66805a", "#a5b89a", "#d3e6bf", "#d9e0cd"]
 
-STEP_DELAY = 0.45  # Pause entre deux étapes du pipeline, pour que la démo reste lisible
+STEP_DELAY = 1.1  # Pause entre deux étapes du pipeline, pour que la démo reste lisible
 
 COMPONENTS = {
     "fundamentals": "Fondamentaux",
@@ -105,9 +105,9 @@ em {{ font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: {
 .tr-flow {{ position: relative; display: grid; grid-template-columns: minmax(0,1.1fr) auto minmax(0,0.8fr) auto minmax(0,1.1fr); gap: 10px; align-items: center; margin-top: 26px; }}
 .tr-col {{ display: flex; flex-direction: column; gap: 8px; }}
 .tr-arrow {{ font: 18px 'IBM Plex Mono', monospace; color: #6f8f7f; }}
-.tr-node {{ display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #ffffff1c; background: #ffffff08; transition: all .3s; }}
+.tr-node {{ display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; border: 1px solid #ffffff1c; background: #ffffff08; transition: all .3s; }}
 .tr-node .dot {{ width: 8px; height: 8px; border-radius: 50%; background: #4d6a5d; flex-shrink: 0; }}
-.tr-node .name {{ font-size: 13px; line-height: 1.3; color: #c3d0c3; flex: 1; min-width: 0; }}
+.tr-node .name {{ font-size: 13px; line-height: 1.3; color: #c3d0c3; flex: 1 1 auto; min-width: 0; word-break: keep-all; }}
 .tr-node .state {{ font: 400 9px/1 'IBM Plex Mono', monospace; letter-spacing: 1.2px; color: #7f978a; white-space: nowrap; }}
 .tr-node.is-running {{ border-color: {SAGE}88; background: #d3e6bf14; }}
 .tr-node.is-running .dot {{ background: {SAGE}; animation: tr-pulse 1s ease-in-out infinite; }}
@@ -124,6 +124,7 @@ em {{ font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: {
 .tr-node.big {{ flex-direction: column; align-items: flex-start; gap: 8px; }}
 .tr-node.sub .name {{ font-size: 12px; }}
 @keyframes tr-pulse {{ 0%, 100% {{ box-shadow: 0 0 0 0 {SAGE}88; }} 50% {{ box-shadow: 0 0 0 6px {SAGE}00; }} }}
+@media (max-width: 1180px) {{ .tr-flow {{ grid-template-columns: 1fr; }} .tr-arrow {{ transform: rotate(90deg); justify-self: center; line-height: 1; }} }}
 .tr-ticker {{ position: relative; margin-top: 22px; padding-top: 12px; border-top: 1px solid #ffffff1c; font: 400 11px/1.7 'IBM Plex Mono', monospace; color: #8fa596; min-height: 62px; }}
 .tr-ticker div:last-child {{ color: {SAGE}; }}
 .tr-ticker div {{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
@@ -268,6 +269,12 @@ def run_live(stock_symbol, use_test_data, panel):
             line = writer.lines.get(timeout=0.1)
         except queue.Empty:
             continue
+        match = RISK_LOG.search(line)
+        if match:
+            # Les contrôles de risque ne loggent que leur verdict : on affiche d'abord l'état « en cours »
+            state["risk"][match.group(1)] = ("running", "")
+            panel.markdown(pipeline_html(stock_symbol, state), unsafe_allow_html=True)
+            time.sleep(STEP_DELAY)
         if apply_log_line(state, line):
             panel.markdown(pipeline_html(stock_symbol, state), unsafe_allow_html=True)
             time.sleep(STEP_DELAY)
