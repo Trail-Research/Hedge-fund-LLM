@@ -11,3 +11,4 @@ langchain>=0.2.1
 langchain-groq>=0.2.1
 tweepy>=4.15.0
 streamlit>=1.32.0
+pyarrow<21  # pyarrow>=21 requiert numpy 2 (numpy est épinglé en 1.26)

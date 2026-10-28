@@ -1,4 +1,3 @@
-from trading_system.agents.market_analyst.test import MockMarketData
 from trading_system.agents.risk_team.marketConditions_agent.main import AgentRiskMarketConditions
 from trading_system.agents.risk_team.exposure_agent.main import AgentRiskExposure
 from trading_system.agents.risk_team.stopLoss_agent.main import AgentRiskStopLoss

@@ -35,12 +35,15 @@ class TradingOrchestrator:
             'trading': True
         }
         
-        # Initialize all analysts (only used when not using test data)
-        self.fundamental_analyst = FundamentalsAnalyst()
-        self.market_analyst = MarketAnalyst()
-        self.trading_analyst = TradingAnalyst()
-        self.news_analyst = NewsAnalyst()
-        self.social_media_analyzer = SocialMediaAnalyst()
+        # Initialize only the analysts that use the real API (they require GROQ_API_KEY)
+        def init_analyst(component, analyst_class):
+            return None if self.use_test_data.get(component, False) else analyst_class()
+
+        self.fundamental_analyst = init_analyst('fundamentals', FundamentalsAnalyst)
+        self.market_analyst = init_analyst('market', MarketAnalyst)
+        self.trading_analyst = init_analyst('trading', TradingAnalyst)
+        self.news_analyst = init_analyst('news', NewsAnalyst)
+        self.social_media_analyzer = init_analyst('social', SocialMediaAnalyst)
 
         # Portfolio = état courant du compte (valeur totale, exposures, levier…)
         self.portfolio = portfolio or self._load_initial_portfolio()
