@@ -5,6 +5,7 @@ Usage: streamlit run app.py
 
 import contextlib
 import json
+import os
 import queue
 import re
 import textwrap
@@ -28,6 +29,8 @@ MOSS = "#66805a"
 NEGATIVE = "#b5654a"
 PALETTE = ["#193f34", "#66805a", "#a5b89a", "#d3e6bf", "#d9e0cd"]
 
+# Démo publique : données simulées imposées, sans accès aux APIs réelles ni à leurs clés
+PUBLIC_DEMO = os.getenv("PUBLIC_DEMO", "").lower() in ("1", "true", "yes")
 DEMO_SYMBOL = "AAPL"  # Les données simulées des agents ne couvrent qu'Apple
 STEP_DELAY = 0.75  # Pause entre deux étapes du pipeline, pour que la démo reste lisible
 
@@ -767,16 +770,23 @@ def main():
 <div class="tr-hero-text">Fondamentaux, marché, actualités et réseaux sociaux sont analysés par des agents LLM spécialisés, puis un trader propose un ordre que l'équipe risque valide ou rejette.</div>
 """)
     with hero_right:
-        col_symbol, col_sources = st.columns([1.3, 1])
-        with col_symbol:
-            stock_symbol = DEMO_SYMBOL
-            html(f'<div class="tr-symbol"><span>{DEMO_SYMBOL}</span>Apple Inc.</div>')
-        with col_sources:
-            with st.popover("Sources", width="stretch"):
-                st.caption("Cochées : données simulées. Décochées : APIs réelles (clés requises dans .env).")
-                use_test_data = {key: st.checkbox(label, value=True, key=f"test_{key}") for key, label in COMPONENTS.items()}
+        stock_symbol = DEMO_SYMBOL
+        symbol_badge = f'<div class="tr-symbol"><span>{DEMO_SYMBOL}</span>Apple Inc.</div>'
+        if PUBLIC_DEMO:
+            html(symbol_badge)
+            use_test_data = {key: True for key in COMPONENTS}
+            footnote = "Démo sur données simulées."
+        else:
+            col_symbol, col_sources = st.columns([1.3, 1])
+            with col_symbol:
+                html(symbol_badge)
+            with col_sources:
+                with st.popover("Sources", width="stretch"):
+                    st.caption("Cochées : données simulées. Décochées : APIs réelles (clés requises dans .env).")
+                    use_test_data = {key: st.checkbox(label, value=True, key=f"test_{key}") for key, label in COMPONENTS.items()}
+            footnote = "Mode démo par défaut : aucune clé API nécessaire."
         launch = st.button("Lancer l'analyse  ↗", type="primary", width="stretch")
-        html('<div class="tr-footnote" style="margin-top:14px"><b>+</b>Mode démo par défaut : aucune clé API nécessaire.</div>')
+        html(f'<div class="tr-footnote" style="margin-top:14px"><b>+</b>{footnote}</div>')
 
     panel = st.empty()
     saved = st.session_state.get("result")

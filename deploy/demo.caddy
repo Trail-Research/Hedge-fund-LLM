@@ -1,0 +1,5 @@
+# À placer DANS le bloc du site trailresear.ch (/etc/caddy/sites-enabled/website.caddy),
+# avant le reverse_proxy du site vitrine. Caddy gère les WebSockets de Streamlit tout seul.
+handle /demo* {
+    reverse_proxy 127.0.0.1:3004
+}
