@@ -28,6 +28,7 @@ MOSS = "#66805a"
 NEGATIVE = "#b5654a"
 PALETTE = ["#193f34", "#66805a", "#a5b89a", "#d3e6bf", "#d9e0cd"]
 
+DEMO_SYMBOL = "AAPL"  # Les données simulées des agents ne couvrent qu'Apple
 STEP_DELAY = 0.75  # Pause entre deux étapes du pipeline, pour que la démo reste lisible
 
 COMPONENTS = {
@@ -85,6 +86,8 @@ em {{ font-family: Georgia, 'Times New Roman', serif; font-weight: 400; color: {
 .tr-eyebrow::before {{ content: ""; width: 23px; height: 1px; background: #66845a; }}
 .tr-hero-title {{ font-size: clamp(40px, 4.6vw, 66px); line-height: 1.06; letter-spacing: -3px; font-weight: 500; margin: 22px 0 0; color: {INK}; }}
 .tr-hero-text {{ max-width: 440px; color: {MUTED}; line-height: 1.8; margin-top: 22px; }}
+.tr-symbol {{ display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 14px; border: 1px solid {LINE}; background: {CARD}; font-size: 13px; color: {MUTED}; white-space: nowrap; overflow: hidden; }}
+.tr-symbol span {{ font: 500 13px/1 'IBM Plex Mono', monospace; letter-spacing: 1.4px; color: {FOREST}; }}
 .tr-footnote {{ font-size: 11px; color: {MUTED}; margin-top: 30px; }}
 .tr-footnote b {{ font: 20px/1 'IBM Plex Mono', monospace; color: #658258; font-weight: 400; margin-right: 8px; }}
 
@@ -766,7 +769,8 @@ def main():
     with hero_right:
         col_symbol, col_sources = st.columns([1.3, 1])
         with col_symbol:
-            stock_symbol = st.text_input("Symbole", value="AAPL", label_visibility="collapsed", placeholder="Symbole, ex. AAPL").strip().upper()
+            stock_symbol = DEMO_SYMBOL
+            html(f'<div class="tr-symbol"><span>{DEMO_SYMBOL}</span>Apple Inc.</div>')
         with col_sources:
             with st.popover("Sources", width="stretch"):
                 st.caption("Cochées : données simulées. Décochées : APIs réelles (clés requises dans .env).")
@@ -782,12 +786,9 @@ def main():
         panel.markdown(pipeline_html(stock_symbol, initial_state()), unsafe_allow_html=True)
 
     if launch:
-        if not stock_symbol:
-            st.warning("Veuillez saisir un symbole boursier.")
-        else:
-            st.session_state.pop("result", None)
-            results, portfolio, state = run_live(stock_symbol, use_test_data, panel)
-            st.session_state["result"] = {"symbol": stock_symbol, "results": results, "portfolio": portfolio, "state": state}
+        st.session_state.pop("result", None)
+        results, portfolio, state = run_live(stock_symbol, use_test_data, panel)
+        st.session_state["result"] = {"symbol": stock_symbol, "results": results, "portfolio": portfolio, "state": state}
 
     saved = st.session_state.get("result")
     if not saved:
