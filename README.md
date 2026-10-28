@@ -129,16 +129,13 @@ streamlit run app.py
 
 L'interface (charte graphique Trail Research) s'ouvre dans le navigateur : l'analyse porte sur AAPL (les données simulées ne couvrent qu'Apple) ; choisissez dans « Sources » entre données simulées (par défaut, aucune clé API requise) et APIs réelles, puis lancez l'analyse. Le pipeline des agents s'anime en direct, puis l'interface affiche la décision, le graphique entrée / stop-loss / objectif, le détail des contrôles de risque, des graphiques interactifs (cours, RSI, avis des analystes, sentiment), le portefeuille avant / après l'ordre, les données brutes et le journal d'exécution.
 
-### Déploiement de la démo (https://trailresear.ch/demo/)
+### Démo publique (https://trailresear.ch/demo/)
 
-La démo publique tourne dans un conteneur Docker (`PUBLIC_DEMO=1` : données simulées imposées, aucune clé API), servi sous `/demo` par le Caddy du serveur.
+La démo publique est une page statique du site [trail-landing](https://github.com/Trail-Research/trail-landing) (`public/demo/`), qui rejoue une analyse en données simulées. Après une modification des agents ou des données simulées, régénérer ses données :
 
 ```bash
-# Sur le serveur, depuis un clone du dépôt
-docker compose -f deploy/compose.yaml up -d --build   # écoute sur 127.0.0.1:3004
+python scripts/export_demo_data.py > ../trail-landing/public/demo/data.js
 ```
-
-Ajouter ensuite le bloc de `deploy/demo.caddy` dans le site `trailresear.ch` de Caddy, puis `sudo caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy`.
 
 ### Utilisation Programmatique
 
