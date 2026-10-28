@@ -20,4 +20,5 @@ def risk_management_pipeline(order, portfolio, mock_data_dict):
         if not valid:
             print(f"[{agent.__class__.__name__}] Order rejected: {reason}")
             return None
+        print(f"[{agent.__class__.__name__}] Order approved: {reason}")
     return order

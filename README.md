@@ -127,7 +127,7 @@ python main.py TSLA
 streamlit run app.py
 ```
 
-L'interface s'ouvre dans le navigateur : saisissez un symbole, choisissez pour chaque composant entre données simulées (par défaut, aucune clé API requise) et APIs réelles, puis lancez l'analyse. Elle affiche la recommandation, l'ordre et sa validation par l'équipe risque, le portefeuille, chaque analyse, les données brutes et le journal d'exécution.
+L'interface (charte graphique Trail Research) s'ouvre dans le navigateur : saisissez un symbole, choisissez dans « Sources » entre données simulées (par défaut, aucune clé API requise) et APIs réelles, puis lancez l'analyse. Le pipeline des agents s'anime en direct, puis l'interface affiche la décision, le graphique entrée / stop-loss / objectif, le détail des contrôles de risque, des graphiques interactifs (cours, RSI, avis des analystes, sentiment), le portefeuille avant / après l'ordre, les données brutes et le journal d'exécution.
 
 ### Utilisation Programmatique
 
